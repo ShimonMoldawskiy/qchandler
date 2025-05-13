@@ -72,6 +72,10 @@ def get_qc_task(task_id):
         logging.exception(f"[{g.request_id}][{task_id}] Error fetching task: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
+
 if __name__ == "__main__":
     if os.getenv("PRODUCTION") == "1":
         logging.exception("Use WSGI to run the app in production")

@@ -8,43 +8,77 @@ services:
     container_name: api_server
     ports:
       - "5000:5000"
+    volumes:
+      - .:/app
     env_file:
       - .env
     depends_on:
-      - db
-      - nats
+      db:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   worker:
     build:
       context: .
       dockerfile: Dockerfile.worker
     container_name: worker_service
+    volumes:
+      - .:/app
     env_file:
       - .env
     depends_on:
-      - db
-      - nats
+      db:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "db", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   retry_job:
     build:
       context: .
       dockerfile: Dockerfile.retry_job
     container_name: retry_job
+    volumes:
+      - .:/app
     env_file:
       - .env
     depends_on:
-      - db
-      - nats
+      db:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "db", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   db:
     image: postgres:15
     container_name: postgres_db
-    env_file:
-      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   nats:
     image: nats:2.10
@@ -52,6 +86,11 @@ services:
     ports:
       - "4222:4222"
       - "8222:8222"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8222"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_data:

@@ -38,7 +38,6 @@ curl http://localhost:5000/tasks/<task_id>
 
 ## Future Development
 
-- Add healthchecks for all services
 - Add gathering of metrics
 - Add support for database migrations
 - Add authentication/authorization and security features
