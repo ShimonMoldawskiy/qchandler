@@ -1,7 +1,8 @@
 # Quantum Circuit Handler
 
-A distributed system for executing quantum circuits with Flask, PostgreSQL, NATS, and Qiskit AerSimulator.
-PostgreSQL was chosen for its ability to handle relational DBMS queries, supporting retry/backoff logic, task traceability, and history. For higher performance needs, alternatives like MongoDB or Redis could be considered. The system is designed to allow easy replacement of the database, broker service, or quantum circuit executor.
+A distributed system for executing quantum circuits built based on Flask, PostgreSQL, NATS, and Qiskit AerSimulator. For the production environment some WSGI server should also be used.
+
+PostgreSQL was chosen for its ability to handle relational DBMS queries to support task retry/backoff logic, task traceability, and history. For higher performance needs, alternatives like MongoDB or Redis could be considered. The system is designed to allow easy replacement of the database, broker service, or quantum circuit executor.
 
 Here's a brief info on the task workflow:
 - task ID is generated as UUID and not as a sequential number to hide the sequence numbers from the external API
@@ -19,14 +20,11 @@ Use the provided `.env` file to set environment variables. Docker Compose will a
 Submit a quantum circuit:
 
 ```bash
+
 curl -X POST http://localhost:5000/tasks \
   -H "Content-Type: application/json" \
   -d '{
-    "qubits": 2,
-    "gates": [
-      {"name": "h", "args": [0]},
-      {"name": "cx", "args": [0, 1]}
-    ]
+    "qasm": "OPENQASM 3.0; include `qelib1.inc`; // ... add your quantum gates here"
   }'
 ```
 

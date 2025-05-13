@@ -35,6 +35,7 @@ def create_qc_task():
 
         task = {
             "id": task_id,
+            "status": TaskStatus.RECEIVED,
             "payload": data,
             "created_at": int(time.time()),
             "updated_at": int(time.time()),

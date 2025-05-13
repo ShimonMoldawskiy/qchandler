@@ -4,6 +4,7 @@ from typing import Optional, Dict, Any
 import time
 
 class TaskStatus(str, Enum):
+    RECEIVED = "received"
     QUEUED = "queued"
     RUNNING = "running"
     COMPLETED = "completed"

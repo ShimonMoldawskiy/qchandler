@@ -3,6 +3,10 @@ import time
 from qiskit import QuantumCircuit
 from qiskit.qasm3 import dumps as qasm3_dumps
 
+import sys
+import os
+sys.path.append(os.path.abspath("."))
+
 from shared.models import TaskStatus
 
 API_URL = "http://localhost:5000"
