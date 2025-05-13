@@ -1,4 +1,4 @@
-# Quantum Task System
+# Quantum Circuit Handler
 
 A distributed system for executing quantum circuits with Flask, PostgreSQL, NATS, and Qiskit AerSimulator.
 PostgreSQL was chosen for its ability to handle relational DBMS queries, supporting retry/backoff logic, task traceability, and history. For higher performance needs, alternatives like MongoDB or Redis could be considered. The system is designed to allow easy replacement of the database, broker service, or quantum circuit executor.
