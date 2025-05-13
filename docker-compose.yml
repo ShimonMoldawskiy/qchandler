@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: api_server
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - nats
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: worker_service
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - nats
+
+  retry_job:
+    build:
+      context: .
+      dockerfile: Dockerfile.retry_job
+    container_name: retry_job
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - nats
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  nats:
+    image: nats:2.10
+    container_name: nats_server
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+volumes:
+  postgres_data:

@@ -1,0 +1,14 @@
+# Core web and networking
+flask==2.3.3
+nats-py==2.6.0
+requests==2.32.3
+
+# Database (PostgreSQL)
+psycopg2-binary==2.9.9
+
+# Quantum Computing
+qiskit==1.0.2
+qiskit-aer==0.17.0
+
+# Utilities
+python-dotenv==1.0.1
